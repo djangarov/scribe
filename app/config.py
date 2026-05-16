@@ -1,10 +1,12 @@
+from typing import Annotated
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     max_upload_bytes: int
-    allowed_image_types_str: str = Field(alias='allowed_image_types')
+    allowed_image_types_str: Annotated[str, Field(alias='allowed_image_types')]
 
     model_config = SettingsConfigDict(env_file=('.env', '.env.local'))
 
