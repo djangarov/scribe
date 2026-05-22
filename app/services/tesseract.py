@@ -3,7 +3,7 @@ import cv2
 import pytesseract
 from PIL import Image
 
-from app.model.scribe import OCRResult
+from app.model.scribe import Result as ScribeResult
 
 def preprocess(image_bytes: bytes) -> np.ndarray:
     arr = np.frombuffer(image_bytes, np.uint8)
@@ -21,7 +21,7 @@ def preprocess(image_bytes: bytes) -> np.ndarray:
     return img
 
 
-def run_ocr(image: np.ndarray, lang: str, psm: int) -> OCRResult:
+def run_ocr(image: np.ndarray, lang: str, psm: int) -> dict:
     config = f'--psm {psm}'
     pil_img = Image.fromarray(image)
 
@@ -35,7 +35,7 @@ def run_ocr(image: np.ndarray, lang: str, psm: int) -> OCRResult:
     confidences = [int(c) for c in data['conf'] if c != '-1']
     avg_conf = sum(confidences) / len(confidences) if confidences else 0.0
 
-    return OCRResult(
+    return ScribeResult(
         text=text.strip(),
         average_confidence=round(avg_conf, 2),
         word_count=len([w for w in data['text'] if w.strip()]),
