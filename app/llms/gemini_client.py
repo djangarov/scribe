@@ -1,6 +1,5 @@
 import json
 
-from cv2 import data
 from google import genai
 from google.genai import types
 from app.llms.base_analyzer import BaseLLMAnalyzerClient
@@ -21,11 +20,9 @@ class GeminiClient(BaseLLMAnalyzerClient):
             config=self._build_config(language)
         )
 
-        print('Gemini response:', response)
-
         data = json.loads(response.text)
 
-        return ScribeResult(data.text.split(), data.average_confidence, len(data.text.split()))
+        return ScribeResult(text=data['text'], average_confidence=data['average_confidence'], word_count= len(data['text'].split()))
 
     def _build_config(self, language: str | None = None) -> types.GenerateContentConfig:
         return types.GenerateContentConfig(

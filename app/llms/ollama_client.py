@@ -21,11 +21,7 @@ class OllamaClient(BaseLLMAnalyzerClient):
             stream=False
         )
 
-        print('Ollama response:', response.message.content)
+        data = json.loads(response.text)
+        print('Ollama response:', data)
 
-        data = json.loads(response.message.content)
-
-        print('Ollama response 2:', data.text)
-
-
-        return ScribeResult(data.text.split(), data.average_confidence, len(data.text.split()))
+        return ScribeResult(text=data['text'], average_confidence=data['average_confidence'], word_count= len(data['text'].split()))
